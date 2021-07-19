@@ -23,7 +23,7 @@ namespace Mistaken.SCP1499
         public override string Prefix => "M1499";
 
         /// <inheritdoc/>
-        public override PluginPriority Priority => PluginPriority.Higher;
+        public override PluginPriority Priority => PluginPriority.Medium;
 
         /// <inheritdoc/>
         public override Version RequiredExiledVersion => new Version(2, 11, 0);
