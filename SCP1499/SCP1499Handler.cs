@@ -310,7 +310,7 @@ namespace Mistaken.SCP1499
                         message += string.Format(PluginHandler.Instance.Translation.InfoDecont, GetTimeColor(lczTime), ((lczTime - (lczTime % 60)) / 60).ToString("00"), Mathf.RoundToInt(lczTime % 60).ToString("00"));
                     int pulse = ((int)Round.ElapsedTime.TotalSeconds % 8) + 4;
                     if (player.IsConnected)
-                        player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, $"{message}<br>{PluginHandler.Instance.Translation.Holding}>");
+                        player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, $"{message}<br>{PluginHandler.Instance.Translation.Holding}");
                 }
                 catch (System.Exception ex)
                 {
