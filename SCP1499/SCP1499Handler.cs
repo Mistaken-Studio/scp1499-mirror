@@ -28,7 +28,6 @@ namespace Mistaken.SCP1499
         {
             Instance = this;
             Log = base.Log;
-            new SCP1499CustomItem();
         }
 
         /// <inheritdoc/>
@@ -57,11 +56,8 @@ namespace Mistaken.SCP1499
         }
 
         /// <inheritdoc/>
-        public class SCP1499CustomItem : CustomItem
+        public class SCP1499CustomItem : CustomItem<SCP1499CustomItem>
         {
-            /// <inheritdoc cref="CustomItem.Register"/>
-            public SCP1499CustomItem() => this.Register();
-
             /// <inheritdoc/>
             public override string ItemName => "SCP-1499";
 
@@ -99,12 +95,12 @@ namespace Mistaken.SCP1499
                     cooldown = DateTime.Now.AddSeconds(CooldownLength);
                     if (target == default)
                         target = new Vector3(0, 1002, 0);
-                    Instance.RunCoroutine(Instance.Use1499(player, target, enablePocketEffect, damage), "SCP1499.Use1499");
+                    this.RunCoroutine(SCP1499Handler.Instance.Use1499(player, target, enablePocketEffect, damage), "Use1499");
                 }
                 catch (System.Exception ex)
                 {
-                    Log.Error(ex.Message);
-                    Log.Error(ex.StackTrace);
+                    this.Log.Error(ex.Message);
+                    this.Log.Error(ex.StackTrace);
                 }
 
                 return false;
@@ -113,7 +109,7 @@ namespace Mistaken.SCP1499
             /// <inheritdoc/>
             public override void OnStartHolding(Player player, Inventory.SyncItemInfo item)
             {
-                Instance.RunCoroutine(Instance.UpdateFlashCooldown(player), "SCP1499.UpdateFlashCooldown");
+                this.RunCoroutine(SCP1499Handler.Instance.UpdateFlashCooldown(player), "UpdateFlashCooldown");
                 player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, PluginHandler.Instance.Translation.Holding);
             }
 
