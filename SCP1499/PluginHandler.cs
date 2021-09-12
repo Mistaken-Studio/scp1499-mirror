@@ -26,16 +26,14 @@ namespace Mistaken.SCP1499
         public override PluginPriority Priority => PluginPriority.Medium;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion => new Version(2, 11, 0);
+        public override Version RequiredExiledVersion => new Version(3, 0, 0, 84);
 
         /// <inheritdoc/>
         public override void OnEnabled()
         {
             Instance = this;
-
-            new SCP1499Handler(this);
-
-            API.Diagnostics.Module.OnEnable(this);
+            new SCP1499CustomItem().TryRegister();
+            new TestCustomItem().TryRegister();
 
             base.OnEnabled();
         }
@@ -43,8 +41,6 @@ namespace Mistaken.SCP1499
         /// <inheritdoc/>
         public override void OnDisabled()
         {
-            API.Diagnostics.Module.OnDisable(this);
-
             base.OnDisabled();
         }
 

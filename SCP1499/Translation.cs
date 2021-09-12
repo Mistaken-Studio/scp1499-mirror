@@ -24,7 +24,7 @@ namespace Mistaken.SCP1499
 
         public string InfoSecond { get; set; } = "<br>[<color=yellow>RMB</color>] <color=yellow>{0} <color=#FF{1}>|</color> {2}</color>";
 
-        public string InfoDecont { get; set; } = "<br><color=#FFFF00{0}>LCZ Decontamination in {1}m {2}s</color>";
+        //public string InfoDecont { get; set; } = "<br><color=#FFFF00{0}>LCZ Decontamination in {1}m {2}s</color>";
 
         public string Info268 { get; set; } = "You can't have both <color=yellow>SCP 268</color> and <color=yellow>SCP 1499</color> at the same time";
 
