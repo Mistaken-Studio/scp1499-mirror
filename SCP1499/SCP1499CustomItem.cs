@@ -22,11 +22,8 @@ using UnityEngine;
 namespace Mistaken.SCP1499
 {
     /// <inheritdoc/>
-    public class SCP1499CustomItem : Exiled.CustomItems.API.Features.CustomGrenade
+    public class SCP1499CustomItem : Mistaken.API.CustomItems.MistakenCustomGrenade
     {
-        // /// <inheritdoc/>
-        // public override SessionVarType SessionVarType => SessionVarType.CI_SCP1499;
-
         /// <inheritdoc/>
         public override bool ExplodeOnCollision { get; set; } = false;
 
@@ -34,7 +31,7 @@ namespace Mistaken.SCP1499
         public override float FuseTime { get; set; } = 0.1f;
 
         /// <inheritdoc/>
-        public override uint Id { get; set; } = 1499;
+        public override API.CustomItems.MistakenCustomItems CustomItem => API.CustomItems.MistakenCustomItems.SCP_1499;
 
         /// <inheritdoc/>
         public override string Name { get; set; } = "SCP-1499";
@@ -44,6 +41,9 @@ namespace Mistaken.SCP1499
 
         /// <inheritdoc/>
         public override float Weight { get; set; } = 1;
+
+        /// <inheritdoc/>
+        public override string DisplayName { get; set; } = "<color=red>SCP-1499</color>";
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties()
@@ -129,8 +129,21 @@ namespace Mistaken.SCP1499
         /// <inheritdoc/>
         protected override void ShowSelectedMessage(Player player)
         {
-            Timing.RunCoroutine(this.UpdateFlashCooldown(player), "UpdateFlashCooldown");
-            player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, PluginHandler.Instance.Translation.Holding);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnChanging(ChangingItemEventArgs ev)
+        {
+            base.OnChanging(ev);
+            Timing.RunCoroutine(this.UpdateFlashCooldown(ev.Player), "UpdateFlashCooldown");
+            ev.Player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, PluginHandler.Instance.Translation.Holding);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnHiding(ChangingItemEventArgs ev)
+        {
+            base.OnHiding(ev);
+            ev.Player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, null);
         }
 
         /// <inheritdoc/>
@@ -138,7 +151,7 @@ namespace Mistaken.SCP1499
         {
             base.SubscribeEvents();
 
-            Events.Handlers.CustomEvents.OnRequestPickItem += this.CustomEvents_OnRequestPickItem;
+            Events.Handlers.CustomEvents.RequestPickItem += this.CustomEvents_OnRequestPickItem;
             Exiled.Events.Handlers.Player.InteractingDoor += this.Player_InteractingDoor;
             Exiled.Events.Handlers.Scp079.TriggeringDoor += this.Scp079_TriggeringDoor;
         }
@@ -148,7 +161,7 @@ namespace Mistaken.SCP1499
         {
             base.UnsubscribeEvents();
 
-            Events.Handlers.CustomEvents.OnRequestPickItem -= this.CustomEvents_OnRequestPickItem;
+            Events.Handlers.CustomEvents.RequestPickItem -= this.CustomEvents_OnRequestPickItem;
             Exiled.Events.Handlers.Player.InteractingDoor -= this.Player_InteractingDoor;
             Exiled.Events.Handlers.Scp079.TriggeringDoor -= this.Scp079_TriggeringDoor;
         }
@@ -220,7 +233,7 @@ namespace Mistaken.SCP1499
                     message += string.Format(PluginHandler.Instance.Translation.InfoFirst, this.ForceLength(this.firstFlashRoom?.Zone.ToString(), 16), this.GetRoomColor(this.firstFlashRoom), this.ForceLength(this.firstFlashRoom?.Type.ToString(), 15));
                     message += string.Format(PluginHandler.Instance.Translation.InfoSecond, this.ForceLength(this.secondFlashRoom?.Zone.ToString(), 16), this.GetRoomColor(this.secondFlashRoom), this.ForceLength(this.secondFlashRoom?.Type.ToString(), 15));
                     if (player.IsConnected)
-                        player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, $"{message}<br>{PluginHandler.Instance.Translation.Holding}");
+                        player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, $"{message}"); // <br>{PluginHandler.Instance.Translation.Holding}
                 }
                 catch (System.Exception ex)
                 {
