@@ -33,7 +33,6 @@ namespace Mistaken.SCP1499
         {
             Instance = this;
             new SCP1499CustomItem().TryRegister();
-            new TestCustomItem().TryRegister();
 
             base.OnEnabled();
         }
