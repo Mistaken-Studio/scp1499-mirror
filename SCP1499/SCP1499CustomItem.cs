@@ -54,7 +54,7 @@ namespace Mistaken.SCP1499
                 {
                     Chance = 100,
                     Name = "SCP 1499 Containment Chamber",
-                    Position = new Vector3(-26, 1020, -44),
+                    Position = new Vector3(-25.5f, 1020.7f, -43.6f),
                 },
             },
         };
