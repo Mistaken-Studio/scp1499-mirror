@@ -12,7 +12,6 @@ using Exiled.API.Features;
 using Exiled.API.Features.Items;
 using Exiled.API.Features.Spawn;
 using Exiled.CustomItems.API.EventArgs;
-using Exiled.Events.EventArgs;
 using MEC;
 using Mistaken.API;
 using Mistaken.API.Extensions;
@@ -43,7 +42,7 @@ namespace Mistaken.SCP1499
         public override float Weight { get; set; } = 1;
 
         /// <inheritdoc/>
-        public override string DisplayName { get; set; } = "<color=red>SCP-1499</color>";
+        public override string DisplayName { get; } = "<color=red>SCP-1499</color>";
 
         /// <inheritdoc/>
         public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties()
@@ -81,7 +80,7 @@ namespace Mistaken.SCP1499
         internal const float CooldownLength = 90;
 
         /// <inheritdoc/>
-        protected override void OnThrowing(ThrowingItemEventArgs ev)
+        protected override void OnThrowing(Exiled.Events.EventArgs.ThrowingItemEventArgs ev)
         {
             if (Warhead.IsDetonated)
                 return;
@@ -120,10 +119,6 @@ namespace Mistaken.SCP1499
             this.secondFlashRoom = null;
 
             base.OnWaitingForPlayers();
-
-            this.rooms = Map.Rooms.ToArray();
-            this.firstFlashRoom = this.GetFreeRoom(null);
-            this.secondFlashRoom = this.GetFreeRoom(null);
         }
 
         /// <inheritdoc/>
@@ -132,7 +127,7 @@ namespace Mistaken.SCP1499
         }
 
         /// <inheritdoc/>
-        protected override void OnChanging(ChangingItemEventArgs ev)
+        protected override void OnChanging(Exiled.Events.EventArgs.ChangingItemEventArgs ev)
         {
             base.OnChanging(ev);
             Timing.RunCoroutine(this.UpdateFlashCooldown(ev.Player), "UpdateFlashCooldown");
@@ -140,7 +135,7 @@ namespace Mistaken.SCP1499
         }
 
         /// <inheritdoc/>
-        protected override void OnHiding(ChangingItemEventArgs ev)
+        protected override void OnHiding(Exiled.Events.EventArgs.ChangingItemEventArgs ev)
         {
             base.OnHiding(ev);
             ev.Player.SetGUI("scp1499", PseudoGUIPosition.BOTTOM, null);
@@ -152,6 +147,7 @@ namespace Mistaken.SCP1499
             base.SubscribeEvents();
 
             Events.Handlers.CustomEvents.RequestPickItem += this.CustomEvents_OnRequestPickItem;
+            Events.Handlers.CustomEvents.GeneratedCache += this.CustomEvents_GeneratedCache;
             Exiled.Events.Handlers.Player.InteractingDoor += this.Player_InteractingDoor;
             Exiled.Events.Handlers.Scp079.TriggeringDoor += this.Scp079_TriggeringDoor;
         }
@@ -162,6 +158,7 @@ namespace Mistaken.SCP1499
             base.UnsubscribeEvents();
 
             Events.Handlers.CustomEvents.RequestPickItem -= this.CustomEvents_OnRequestPickItem;
+            Events.Handlers.CustomEvents.GeneratedCache -= this.CustomEvents_GeneratedCache;
             Exiled.Events.Handlers.Player.InteractingDoor -= this.Player_InteractingDoor;
             Exiled.Events.Handlers.Scp079.TriggeringDoor -= this.Scp079_TriggeringDoor;
         }
@@ -187,6 +184,13 @@ namespace Mistaken.SCP1499
         private Vector3 FirstFlashPosition => this.firstFlashRoom?.gameObject == null ? default : this.firstFlashRoom.Position;
 
         private Vector3 SecondFlashPosition => this.secondFlashRoom?.gameObject == null ? default : this.secondFlashRoom.Position;
+
+        private void CustomEvents_GeneratedCache()
+        {
+            this.rooms = Room.List.ToArray();
+            this.firstFlashRoom = this.GetFreeRoom(null);
+            this.secondFlashRoom = this.GetFreeRoom(null);
+        }
 
         private void Scp079_TriggeringDoor(Exiled.Events.EventArgs.TriggeringDoorEventArgs ev)
         {
@@ -268,7 +272,7 @@ namespace Mistaken.SCP1499
             }
         }
 
-        private IEnumerator<float> Use1499(ThrowingItemEventArgs ev)
+        private IEnumerator<float> Use1499(Exiled.Events.EventArgs.ThrowingItemEventArgs ev)
         {
             Vector3 target;
             bool enablePocketEffect = false;
@@ -408,11 +412,11 @@ namespace Mistaken.SCP1499
                 if (trie >= 1000)
                 {
                     Log.Error("Failed to generate teleport position in 1000 tries");
-                    return Map.Rooms.First(r => r.Type == RoomType.Surface);
+                    return Room.List.First(r => r.Type == RoomType.Surface);
                 }
             }
 
-            Log.Debug($"New position is {targetRoom.Position} | {targetRoom.Zone}", PluginHandler.VerbouseOutput);
+            Log.Debug($"New position is {targetRoom.Position} | {targetRoom.Zone}", PluginHandler.Instance.Config.VerbouseOutput);
             return targetRoom;
         }
 

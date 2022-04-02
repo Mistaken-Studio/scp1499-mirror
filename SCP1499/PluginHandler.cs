@@ -26,7 +26,7 @@ namespace Mistaken.SCP1499
         public override PluginPriority Priority => PluginPriority.Medium;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion => new Version(4, 1, 2);
+        public override Version RequiredExiledVersion => new Version(5, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
@@ -44,7 +44,5 @@ namespace Mistaken.SCP1499
         }
 
         internal static PluginHandler Instance { get; private set; }
-
-        internal static bool VerbouseOutput => Instance.Config.VerbouseOutput;
     }
 }
