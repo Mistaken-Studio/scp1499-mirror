@@ -149,7 +149,7 @@ namespace Mistaken.SCP1499
             base.SubscribeEvents();
 
             Events.Handlers.CustomEvents.RequestPickItem += this.CustomEvents_OnRequestPickItem;
-            Events.Handlers.CustomEvents.GeneratedCache += this.CustomEvents_GeneratedCache;
+            Exiled.Events.Handlers.Server.WaitingForPlayers += this.Server_WaitingForPlayers;
             Exiled.Events.Handlers.Player.InteractingDoor += this.Player_InteractingDoor;
             Exiled.Events.Handlers.Scp079.TriggeringDoor += this.Scp079_TriggeringDoor;
         }
@@ -160,7 +160,7 @@ namespace Mistaken.SCP1499
             base.UnsubscribeEvents();
 
             Events.Handlers.CustomEvents.RequestPickItem -= this.CustomEvents_OnRequestPickItem;
-            Events.Handlers.CustomEvents.GeneratedCache -= this.CustomEvents_GeneratedCache;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= this.Server_WaitingForPlayers;
             Exiled.Events.Handlers.Player.InteractingDoor -= this.Player_InteractingDoor;
             Exiled.Events.Handlers.Scp079.TriggeringDoor -= this.Scp079_TriggeringDoor;
         }
@@ -187,7 +187,7 @@ namespace Mistaken.SCP1499
 
         private Vector3 SecondFlashPosition => this.secondFlashRoom?.gameObject == null ? default : this.secondFlashRoom.Position;
 
-        private void CustomEvents_GeneratedCache()
+        private void Server_WaitingForPlayers()
         {
             this.rooms = Room.List.ToArray();
             this.firstFlashRoom = this.GetFreeRoom(null);
